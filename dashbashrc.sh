@@ -66,6 +66,7 @@ azm(){
 }
 
 # Run a socks5 proxied chromium window. Additionally, you can pull curl calls via --socks5-hostname
+# $1 = port, $2 = hostname, $3 = hostname-port
 proxify(){
 	ssh -f -N -D $1 $2 -p $3;
 	chromium --proxy-server="socks5://localhost:$1" wtfismyip.com;
@@ -77,14 +78,17 @@ fixEclipse(){
 	eclipse &
 }
 
+# Encrypts $1 and saves the encrypted file as $2.
 encFile(){
 	openssl enc -in  $1 -out $2 -e -aes256 -pass "pass:$(echo $3 | md5sum)";
 }
 
+# Opposite of previous function.
 decFile(){
 	openssl enc -in $1 -out $2 -d -aes256 -pass "pass:$(echo $3 | md5sum)";
 }
 
+# Keeps a single encrypted text file. Validated against intruders.
 secText(){
 	cat $1 &> /dev/null;
 	if [ $(echo $?) -ne $(echo 0) ]; then
@@ -102,7 +106,14 @@ secText(){
 			echo 'Nice try. Wrong pass.';
 		fi
 	fi
-	
+
+}
+
+# Make vnc connection via ssh tunnel.
+# $1 = hostname, $2 = from port, $3 = to port.
+sshvnc(){
+	ssh -L $2:localhost:$3 $1;
+	vncviewer localhost;
 }
 
 ###################
