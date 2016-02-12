@@ -125,4 +125,4 @@ alias wanip="jcurl http://wtfismyip.com/json"
 alias mtcifs='sudo mount -t cifs //$1 $2 -o rw'
 # Must have installed youtube-dl:
 alias ymp3='youtube-dl --extract-audio --audio-format mp3 -l $1'
-
+alias rot13="tr '[A-Za-z]' '[N-ZA-Mn-za-m]'"
