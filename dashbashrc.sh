@@ -36,9 +36,16 @@ clearmeh(){
 ## Open chrome apps in a little tab-less window:
 ## Bear in mind: Window sizes set to fit my monitor. Your mileage may vary.
 tinychromeapp(){
-	chromium --user-data-dir=/home/$USER/.meh --window-position=$2 --window-size=400,315 --app=$1 &
-	# Comment this if you don't want to re-type passwords at the expense of having to manually move windows:
-	clearmeh
+	FLAG=0
+	[ ! -z $1 ] && [ ! -z $2 ] && [ ! -z $3 ] && FLAG=1
+	if [ $FLAG -eq 1 ]; then
+		echo Opening $1...
+		clearmeh && chromium --user-data-dir=/home/$USER/.meh --window-position=$2 --window-size=$3 --app=$1 &
+	else
+		echo Usage: $FUNCNAME URL POSITION SIZE
+		echo Position and size are two comma separate integers.
+		echo Example: $FUNCNAME http://google.com 500,500 500,500
+	fi
 }
 
 ## Opens hack.chat with a specific channel, position and size:
