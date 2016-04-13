@@ -97,20 +97,25 @@ decFile(){
 
 # Keeps a single encrypted text file. Validated against intruders.
 secText(){
-	cat $1 &> /dev/null;
-	if [ $(echo $?) -ne $(echo 0) ]; then
+	FLAG=0
+	[ ! -z $1 ] && [ ! -z $2 ] && FLAG=1
+	if [ $FLAG -eq 1 ] && [ ! -e $1 ]; then
 		nano $1;
 		encFile $1 .$1.e $2;
 		rm -rf $1;
+		mv .$1.e .$1
+		chmod 400 .$1;
+
 	else
 		decFile $1 $1.d $2 &> /dev/null;
-		if [ $(echo $?) -eq $(echo 0) ]; then
+		if [ $? -eq 0 ]; then
 			rm -rf $1;
 			nano $1.d;
 			encFile $1.d $1 $2;
 			rm -rf $1.d;
+			chmod 400 $1
 		else
-			echo 'Nice try. Wrong pass.';
+			[ $FLAG -ne 1 ] && echo USAGE $0 FILENAME PASSWORD || echo 'Nice try. Wrong pass.';
 		fi
 	fi
 
