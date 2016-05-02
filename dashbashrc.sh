@@ -36,9 +36,16 @@ clearmeh(){
 ## Open chrome apps in a little tab-less window:
 ## Bear in mind: Window sizes set to fit my monitor. Your mileage may vary.
 tinychromeapp(){
-	chromium --user-data-dir=/home/$USER/.meh --window-position=$2 --window-size=400,315 --app=$1 &
-	# Comment this if you don't want to re-type passwords at the expense of having to manually move windows:
-	clearmeh
+	FLAG=0
+	[ ! -z $1 ] && [ ! -z $2 ] && [ ! -z $3 ] && FLAG=1
+	if [ $FLAG -eq 1 ]; then
+		echo Opening $1...
+		clearmeh && chromium --user-data-dir=/home/$USER/.meh --window-position=$2 --window-size=$3 --app=$1 &
+	else
+		echo Usage: $FUNCNAME URL POSITION SIZE
+		echo Position and size are two comma separate integers.
+		echo Example: $FUNCNAME http://google.com 500,500 500,500
+	fi
 }
 
 ## Opens hack.chat with a specific channel, position and size:
@@ -90,20 +97,25 @@ decFile(){
 
 # Keeps a single encrypted text file. Validated against intruders.
 secText(){
-	cat $1 &> /dev/null;
-	if [ $(echo $?) -ne $(echo 0) ]; then
+	FLAG=0
+	[ ! -z $1 ] && [ ! -z $2 ] && FLAG=1
+	if [ $FLAG -eq 1 ] && [ ! -e $1 ]; then
 		nano $1;
 		encFile $1 .$1.e $2;
 		rm -rf $1;
+		mv .$1.e .$1
+		chmod 400 .$1;
+
 	else
 		decFile $1 $1.d $2 &> /dev/null;
-		if [ $(echo $?) -eq $(echo 0) ]; then
+		if [ $? -eq 0 ]; then
 			rm -rf $1;
 			nano $1.d;
 			encFile $1.d $1 $2;
 			rm -rf $1.d;
+			chmod 400 $1
 		else
-			echo 'Nice try. Wrong pass.';
+			[ $FLAG -ne 1 ] && echo USAGE $0 FILENAME PASSWORD || echo 'Nice try. Wrong pass.';
 		fi
 	fi
 
@@ -115,7 +127,6 @@ sshvnc(){
 	ssh -L $2:localhost:$3 $1;
 	vncviewer localhost;
 }
-
 ###################
 ## Aliases       ##
 ###################
