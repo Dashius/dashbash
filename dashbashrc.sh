@@ -5,7 +5,7 @@
 ###################
 ## Shell prompt: ##
 ###################
-PS1="[\t][\W] \e[0;34m\u\e[m@\h -> "
+PS1='[\t][\W] \[\033[1m\033[34m\]\u\[\033[0m\]@\h -> '
 
 ###################
 ## Greeting      ##
@@ -18,7 +18,7 @@ echo Today is $(date +"%A"), $(date +"%B") $(date +"%d") $(date +"%Y").
 ## Functions     ##
 ###################
 ## Displays jsons from web-based APIs nicely:
-jcurl(){ 
+jcurl(){
 	local DATA=$(curl $1);
 	 echo $DATA | python -m json.tool;
 	}
