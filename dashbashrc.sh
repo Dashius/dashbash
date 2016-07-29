@@ -130,7 +130,7 @@ sshvnc(){
 
 # Colorful LS output. Just for fun.
 colorLS(){
-        /bin/ls -l | while read LINE; do
+        /bin/ls -alrt | while read LINE; do
                 echo -e "\e[3$(( $RANDOM * 6 / 32767 + 1 ))m $LINE"
         done
         echo -e "\e[0;34m\e[m "
@@ -147,5 +147,5 @@ alias mtcifs='sudo mount -t cifs //$1 $2 -o rw'
 alias ymp3='youtube-dl --extract-audio --audio-format mp3 -l $1'
 alias rot13="tr '[A-Za-z]' '[N-ZA-Mn-za-m]'"
 alias weather='curl -4 http://wttr.in/'
-# If you want to replace ls command for colorLS function uncomment:
-alias ls='colorLS'
+# Colorful ls output:
+alias ll='colorLS'
